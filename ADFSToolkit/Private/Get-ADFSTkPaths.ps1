@@ -26,5 +26,7 @@
     $paths.defaultInstitutionLocalSPFile = Join-Path $paths.moduleConfigDefaultDir 'get-ADFSTkLocalManualSPSettings-dist.ps1'
     $paths.defaultInstitutionLocalTransformRulesFile = Join-Path $paths.moduleConfigDefaultDir 'Get-ADFSTkLocalTransformRules-dist.ps1'
 
+    $paths.stateConfigFile = Join-Path $paths.MainConfigDir 'state.ADFSTk.xml'
+
     return $paths
 }

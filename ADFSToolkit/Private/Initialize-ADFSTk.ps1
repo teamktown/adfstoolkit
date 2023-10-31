@@ -2,7 +2,8 @@ function Initialize-ADFSTk {
     $Global:ADFSTkPaths = Get-ADFSTKPaths
     $Global:ADFSTkCompatibleInstitutionConfigVersion = "1.4"
     $Global:ADFSTkCompatibleADFSTkConfigVersion = "1.1"
-    $Global:ADFSTkCompatibleLanguageTableConfigVersion = "2.1"
+    $Global:ADFSTkCompatibleStateConfigVersion = "1.0"
+    $Global:ADFSTkCompatibleLanguageTableConfigVersion = "2.2"
 
     #region Create main dirs
     ADFSTk-TestAndCreateDir -Path $Global:ADFSTkPaths.mainDir               -PathName "ADFSTk install directory" #C:\ADFSToolkit

@@ -1,6 +1,6 @@
 ﻿@{
     tableLanguage = "en-US"
-    tableVersion = "2.1"
+    tableVersion = "2.2"
     tableCreatedBy = "SWAMID"
     tableContactAddress = "operations@swamid.se"
 
@@ -84,6 +84,19 @@ Get-ADFSTkFederationDefaults -URL [the URL provided from your Federation Operato
 
     mainconfNoConfigFileFound = "No ADFSTk configuration file found!"
     mainconfCouldNotParseConfigFile =  "Could not open or parse the ADFSTk configuration file!`r`n{0}"
+
+    ###############################################
+    ### State configuration cmdlets [stateconf] ###
+    ###############################################
+
+    stateconfCouldNotParseConfigFile = "Could not open or parse the State configuration file!`r`n{0}"
+    stateconfConfigFileExists = "A State configuration file already exists!"
+    stateconfDoCreateConfigFile = "Do you want to create a new State configuration file?`n(the current one will be backed up)"
+    stateconfOldConfigBackedUp = "Current State configuration file backed up to: '{0}'"
+    stateconfAbortDueToExistingConfFile = "Aborting due to already existing State configuration file."
+    stateconfNewConfFileCreated = "New State configuration file created: '{0}'"
+    stateconfNewConfFileMissing = "The State configuration file is missing! It will be created automatically now."
+    stateconfNoConfigFileFound = "No State configuration file found!"
 
     ################################################
     ### Institution configuration cmdlets [conf] ###
@@ -239,7 +252,7 @@ Please open the file and configure how ADFSToolkit can get them (Active Director
     confSelectInstitutionConfigToDisable = "Select the configuration file(s) you want to disable."
     confNoInstitutionConfigFileSelected = "No configurationfile(s) were selected. Nothing changed!"
 
-    confProcessLoginEvents = "Process Login Events"
+    confProcessLoginEvents = "Process Login Events (f-ticks)"
     confThisSchedTaskGetsLoginEventsAndSendAsFticks = "This Scheduled Task reads login events from the Event Log and sends it to a f-ticks server"
     confFticksScheduledTaskInfo = @"
 The created F-Ticks Scheduled Task is currently disabled. Start Task Scheduler and enable it to start sending f-ticks. When enabled, it will run every 10 minutes.
@@ -254,6 +267,18 @@ If you skip this step now you can configure it manually later by running:
 Set-ADFSTkFticksServer -Server [mysyslogserver.institution.edu]
 Register-ADFSTkFTicksScheduledTask
 "@
+    confIsAuditPolicyEnabled = "Checking if Audit Policy is enabled"
+    confAuditPolicyNeeded = @"
+    For the f-ticks to work properly, we need to alter the Audit Policy 'Application Generated' and enable
+    it for success and failure. You can see the Audit Policy if you start  the Local Security Policy and go to:
+    Advanced Audit Policy Configuration -> System Audit Policies -> Object Access
+    or with the command:
+    auditpol /get /category:'Object Access' /r | ConvertFrom-Csv | ? Subcategory -eq 'Application Generated'
+"@
+    confEnableAuditPolicyNow = "Do you want to enable the Audit Policy now?"
+    confAuditPolicyHasBeenEnabled = "Audit Policy 'Application Generated' has been enabled"
+    confAuditPolicyAborted = "Audit Policy 'Application Generated' has not been enabled. Please enable it and try again!"
+    confAuditPolicyIsEnabled = "Audit Policy 'Application Generated' is enabled"
 
     #######################################
     ### Federation cmdlets [federation] ###

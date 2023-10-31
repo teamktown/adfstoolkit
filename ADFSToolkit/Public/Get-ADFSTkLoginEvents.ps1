@@ -5,10 +5,9 @@ function Get-ADFSTkLoginEvents {
    
     $LastRecordID = 0
     if ($PSBoundParameters.ContainsKey('LatestRecordsOnly') -and $LatestRecordsOnly -ne $false) {
-        if ([string]::IsNullOrEmpty($Global:ADFSTkConfiguration)) {
-            $Global:ADFSTkConfiguration = Get-ADFSTkConfiguration
-        }
-        $LastRecordID = $Global:ADFSTkConfiguration.Fticks.LastRecordId
+        $stateConfig = Get-ADFSTkStateConfiguration
+        
+        $LastRecordID = $stateConfig.'Fticks'.LastRecordId
         if ([string]::IsNullOrEmpty($LastRecordID)) {
             $LastRecordID = 0
         }

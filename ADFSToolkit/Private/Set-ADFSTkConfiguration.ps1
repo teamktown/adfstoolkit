@@ -3,8 +3,8 @@ function Set-ADFSTkConfiguration {
     param (
         $OutputLanguage,
         $FticksServer,
-        $FticksSalt,
-        $FticksLastRecordId
+        $FticksSalt
+        # $FticksLastRecordId
     )
 
     if (!(Test-Path $Global:ADFSTKPaths.mainConfigFile)) {
@@ -59,15 +59,15 @@ function Set-ADFSTkConfiguration {
     }
 
     #FticksLastRecordId
-    if ($PSBoundParameters.ContainsKey('FticksLastRecordId')) {
-        if ($config.Configuration.Fticks.LastRecordId -eq $null) {
-            Add-ADFSTkXML -NodeName "LastRecordId" -XPathParentNode "Configuration/Fticks" -Value $FticksLastRecordId
-        }
-        else {
-            $OutpuLanguageNode = Select-Xml -Xml $config -XPath "Configuration/Fticks/LastRecordId"
-            $OutpuLanguageNode.Node.innerText = $FticksLastRecordId
-        }
-    }
+    # if ($PSBoundParameters.ContainsKey('FticksLastRecordId')) {
+    #     if ($config.Configuration.Fticks.LastRecordId -eq $null) {
+    #         Add-ADFSTkXML -NodeName "LastRecordId" -XPathParentNode "Configuration/Fticks" -Value $FticksLastRecordId
+    #     }
+    #     else {
+    #         $OutpuLanguageNode = Select-Xml -Xml $config -XPath "Configuration/Fticks/LastRecordId"
+    #         $OutpuLanguageNode.Node.innerText = $FticksLastRecordId
+    #     }
+    # }
 
     #Save the configuration file
     #Don't save the configuration file if -WhatIf is present
