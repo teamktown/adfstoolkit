@@ -4,8 +4,8 @@
         [Parameter(ParameterSetName = 'Default', Position = 0)]
         [ValidateNotNullOrEmpty()]
         [string]
-        $URL,
-        [Parameter(ParameterSetName = 'Default')]    
+        $URL = 'https://github.com/fedtools/federation-settings/archive/refs/heads/main.zip',
+        [Parameter(ParameterSetName = 'Default')]
         [switch]$InstallDefaults,
         [Parameter(ParameterSetName = 'ClearCache')]
         [switch]$ClearCache,
