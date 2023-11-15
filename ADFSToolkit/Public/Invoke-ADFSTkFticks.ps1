@@ -14,7 +14,7 @@ function Invoke-ADFSTkFticks {
     $Server = $Global:ADFSTkConfiguration.Fticks.Server #Where to send the f-ticks
     $Hostname = (Get-AdfsProperties).Identifier.Host
     $IdP = (Get-AdfsProperties).Identifier.AbsoluteUri 
-    $Application = "ADFSToolkitv{0}:" -f (Get-Module ADFSToolkit).Version.ToString()
+    $Application = "ADFSToolkitv{0}:" -f $MyInvocation.MyCommand.Module.Version.ToString()
 
     $ErrorOccurred = $false
 
