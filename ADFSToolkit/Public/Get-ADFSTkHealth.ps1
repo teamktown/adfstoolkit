@@ -18,7 +18,7 @@
         RemovedSPsStillInSPHash       = ($HealthCheckMode -eq "Full") #Only run in Full mode
         ScheduledTaskPresent          = ($HealthCheckMode -eq "Full") #Checks if the Import Metadata Scheduled Task is present
         MissingSPsInADFS              = ($HealthCheckMode -eq "Full") #Only run in Full mode
-        FticksScheduledTaskPresent     = ($HealthCheckMode -eq "Full") #Checks if the F-ticks Scheduled Task is present
+        FticksScheduledTaskPresent    = ($HealthCheckMode -eq "Full") #Checks if the F-ticks Scheduled Task is present
     }
 
     enum Result {
