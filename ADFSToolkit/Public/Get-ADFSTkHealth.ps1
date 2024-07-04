@@ -547,7 +547,7 @@
         $resultObject = $healthResults | ? FixID -eq "FixADFSTkConfigVersion"
             if (![String]::IsNullOrEmpty($resultObject)) {
                 if ((Get-ADFSTkAnswer (Get-ADFSTkLanguageText healthUpdateADFSTkConfigVersion))) {
-                    Update-ADFSTkConfiguration
+                    Update-ADFSTk
                 
                     $resultObject.ResultText = (Get-ADFSTkLanguageText healthFixed) + $resultObject.ResultText
                     $resultObject.ResultValue = [Result]::Pass 
@@ -564,8 +564,8 @@
         $resultObjects = $healthResults | ? FixID -eq "FixInstitutionConfigVersion"
         foreach ($resultObject in $resultObjects) {
             if (![String]::IsNullOrEmpty($resultObject)) {
-                if ((Get-ADFSTkAnswer (Get-ADFSTkLanguageText healthUpdateInstitutionConfigVersion -f $resultObject.ReferenceFile))) {
-                    Update-ADFSTkInstitutionConfiguration -ConfigurationFile $resultObject.ReferenceFile
+                if ((Get-ADFSTkAnswer (Get-ADFSTkLanguageText healthUpdateInstitutionConfigVersion))) {
+                    Update-ADFSTk
                 
                     $resultObject.ResultText = (Get-ADFSTkLanguageText healthFixed) + $resultObject.ResultText
                     $resultObject.ResultValue = [Result]::Pass 

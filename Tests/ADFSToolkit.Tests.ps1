@@ -99,7 +99,10 @@ if (Test-Path $ADFSToolkitRootPath) {
 Initialize-ADFSTk
 #endregion
 
-Invoke-ADFSTKTest -mainConfigVersion "1.0" -institutionConfigVersion "1.0" -federationConfigVersion "1.4" -federationMainConfigVersion "1.1"
+$latestInstitutionConfigVersion = $Global:ADFSTkCompatibleInstitutionConfigVersion
+$latestADFSTkConfigVersion = $Global:ADFSTkCompatibleADFSTkConfigVersion
+
+Invoke-ADFSTKTest -mainConfigVersion "1.0" -institutionConfigVersion "1.0" -federationConfigVersion $latestInstitutionConfigVersion -federationMainConfigVersion $latestADFSTkConfigVersion
 if ([string]::IsNullOrEmpty((Get-ADFSTkConfiguration -ConfigFilesOnly | ? {$_.Enabled -eq $true})))
 {
     Write-Host "Institution Config is disabled after upgrade..." -ForegroundColor Green
@@ -109,9 +112,11 @@ else
     Write-Host "Institution Config is not disabled after upgrade!" -ForegroundColor Red
 }
 $myNull = Read-Host "Press any key to continue..."
-Invoke-ADFSTKTest -mainConfigVersion "1.0" -institutionConfigVersion "1.3" -federationConfigVersion "1.4" -federationMainConfigVersion "1.1"
+
+Invoke-ADFSTKTest -mainConfigVersion "1.0" -institutionConfigVersion "1.3" -federationConfigVersion $latestInstitutionConfigVersion -federationMainConfigVersion $latestADFSTkConfigVersion
 $myNull = Read-Host "Press any key to continue..."
-Invoke-ADFSTKTest -mainConfigVersion "1.0" -institutionConfigVersion "1.4" -federationConfigVersion "1.4" -federationMainConfigVersion "1.1"
+
+Invoke-ADFSTKTest -mainConfigVersion "1.0" -institutionConfigVersion $latestInstitutionConfigVersion -federationConfigVersion $latestInstitutionConfigVersion -federationMainConfigVersion $latestADFSTkConfigVersion
 if ([string]::IsNullOrEmpty((Get-ADFSTkConfiguration -ConfigFilesOnly | ? {$_.Enabled -eq $true})))
 {
     Write-Host "Institution Config were disabled even no upgrade!" -ForegroundColor Red
@@ -122,8 +127,11 @@ else
 
 }
 $myNull = Read-Host "Press any key to continue..."
-Invoke-ADFSTKTest -mainConfigVersion "1.1 (IncorrectDefaultConfigVersion)" -institutionConfigVersion "1.4" -federationConfigVersion "1.3" -federationMainConfigVersion "1.1"
+
+Invoke-ADFSTKTest -mainConfigVersion "1.1 (IncorrectDefaultConfigVersion)" -institutionConfigVersion $latestInstitutionConfigVersion -federationConfigVersion "1.3" -federationMainConfigVersion $latestADFSTkConfigVersion
 $myNull = Read-Host "Press any key to continue..."
-Invoke-ADFSTKTest -mainConfigVersion "1.1 (CorrectDefaultConfigVersion)" -institutionConfigVersion "1.4" -federationConfigVersion "1.3" -federationMainConfigVersion "1.1"
+
+Invoke-ADFSTKTest -mainConfigVersion "1.1 (CorrectDefaultConfigVersion)" -institutionConfigVersion $latestInstitutionConfigVersion -federationConfigVersion "1.3" -federationMainConfigVersion $latestADFSTkConfigVersion
 $myNull = Read-Host "Press any key to continue..."
-Invoke-ADFSTKTest -mainConfigVersion "1.1 (CorrectDefaultConfigVersion)" -institutionConfigVersion "1.0" -federationConfigVersion "1.3" -federationMainConfigVersion "1.1"
+
+Invoke-ADFSTKTest -mainConfigVersion "1.1 (CorrectDefaultConfigVersion)" -institutionConfigVersion "1.0" -federationConfigVersion "1.3" -federationMainConfigVersion $latestADFSTkConfigVersion

@@ -30,10 +30,10 @@
                 else {
                     $defaultMainFederationConfig = $null
                     if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confContinueWithoutDefaultFederationConfig) -DefaultYes) {
-                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) #Fix text!
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig)
                     }
                     else {
-                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault #Fix text!
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault
                     }
                 }
             }
@@ -45,10 +45,10 @@
                 else {
                     $defaultMainFederationConfig = $null
                     if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confContinueWithoutDefaultFederationConfig) -DefaultYes) {
-                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) #Fix text!
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig)
                     }
                     else {
-                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault #Fix text!
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault
                     }
                 }
             }

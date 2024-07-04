@@ -517,13 +517,13 @@ on the other ADFS servers to.
     The ADFS Toolkit Configuration File is incompatible with this version of ADFS Toolkit!
     The ADFS Toolkit Configuration File version is {0} and the version needs to be {1}.
     
-    Run Update-ADFSTkConfiguration to update your configuration to the correct version.
+    Run Update-ADFSTk to update your configuration to the correct version.
 "@
     healthIncompatibleInstitutionConfigVersion = @"
 The provided Institution Configuration File is incompatible with this version of ADFS Toolkit!
 The Institution Configuration File version is {0} and the version needs to be {1}.
 
-Run Update-ADFSTkInstitutionConfiguration to update your configuration to the correct version.
+Run Update-ADFSTk to update your configuration to the correct version.
 "@
     healthCheckMissingSignaturesName = "Check missing signatures"
     healthCheckIncorectSignaturesName = "Check incorrect signatures"
@@ -556,8 +556,8 @@ If you don't know why this occurred, reinstallation of ADFS Toolkit is recommend
     healthCheckConfigVersionVerifyingVersionStart = "Verifying compatible version..."
     healthCheckConfigVersionVerifyingVersionCompareVersions = "Config version: {0} - Compatible version: {1}"
     healthCheckConfigVersionVerifyingVersionSucceeded = "Compatible version succeeded!"
-    healthUpdateADFSTkConfigVersion = "Do you want to run Update-ADFSTkConfiguration?"
-    healthUpdateInstitutionConfigVersion = "Do you want to run Update-ADFSTkInstitutionConfiguration for {0}?"
+    healthUpdateADFSTkConfigVersion = "Do you want to run Update-ADFSTk?"
+    healthUpdateInstitutionConfigVersion = "Do you want to run Update-ADFSTk?"
     healthCheckConfigVersionPass = "Versioncheck PASSED!"
     healthCheckConfigVersionFail = "Versioncheck FAILED!"
     healthCheckMFAAccessPolicyStartMessage = "Checking if MFA Adapter is installed and Access Control Policy is present..."
