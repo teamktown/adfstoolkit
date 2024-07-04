@@ -191,7 +191,8 @@ When the upgrade is done and you have tested everything, run Enable-ADFSTkInstit
     confUpdatedInstConfigDone = "{0} updated successfully from v{1} to {2}!"
     confUpdatedInstConfigAllDone = "All Institution config file(s) done..."
     confProcessingInstConfig = "Processing Institution config file: '{0}'"
-    confInstConfAlreadyCorrectVersion = "Current Institution config file already at v{0}!"
+    confInstConfAlreadyCorrectVersion = "{0} already at v{1}!"
+    confInstConfNeedsUpgrade = "{0} needs to be updated from v{1} to {2}!"
     confLocalManualSettingsMessage = @"
 ADFS Toolkit uses Entity Categories from the metadata to send correct attributes to the Service Providers.
 
@@ -256,7 +257,7 @@ Please open the file and configure how ADFSToolkit can get them (Active Director
     confThisSchedTaskGetsLoginEventsAndSendAsFticks = "This Scheduled Task reads login events from the Event Log and sends it to a f-ticks server"
     confFticksScheduledTaskInfo = @"
 The created F-Ticks Scheduled Task is currently disabled. Start Task Scheduler and enable it to start sending f-ticks. When enabled, it will run every 10 minutes.
-It's rekommended to change the running user to a service account with privileges to read the Event Log.
+It's recommended to change the running user to a service account with privileges to read the Event Log.
 "@
 
     confUpdatingADFSTkConfigFromTo = "Updating ADFS Toolkit config from {0} to {1}"
@@ -266,6 +267,14 @@ This version supports F-Ticks. Do you want to configure that now?
 If you skip this step now you can configure it manually later by running:
 Set-ADFSTkFticksServer -Server [mysyslogserver.institution.edu]
 Register-ADFSTkFTicksScheduledTask
+"@
+    confFticksRegisterOnAllServers = @"
+You need to activate F-Ticks on all ADFS Servers in the farm!
+Run:
+Set-ADFSTkFticksServer -Server {0} 
+and
+Register-ADFSTkFTicksScheduledTask
+on the other ADFS servers to.
 "@
     confIsAuditPolicyEnabled = "Checking if Audit Policy is enabled"
     confAuditPolicyNeeded = @"
@@ -279,6 +288,18 @@ Register-ADFSTkFTicksScheduledTask
     confAuditPolicyHasBeenEnabled = "Audit Policy 'Application Generated' has been enabled"
     confAuditPolicyAborted = "Audit Policy 'Application Generated' has not been enabled. Please enable it and try again!"
     confAuditPolicyIsEnabled = "Audit Policy 'Application Generated' is enabled"
+    confRunHealthCheckRecommended = "It's recommended to run Get-ADFSTkHealth -HealthCheckMode Full to find any errors."
+    confDoRunHealthCheck = "Do you want to run a full health check now?"
+    confNoUpdatesNeeded = "No updates to ADFSTk Configuration or AFSTk Institution Configuration needed or the configuration file(s) aready has the correct version."
+    confUpdateError = "At least one update failed. Please look above and correct the error(s) before continuing!"
+    confProcessingADFSTkConfigs = "Processing ADFS Toolkit configuration file..."
+    confProcessingInstitutionConfigs = "Processing Institution configuration files..."
+    confContinueWithoutFederationConfig = "Updating Institution Config without Default Federation Config..."
+    confAbortDueToIncorrectFederationConfigVersion = "Aborting due to missing or incorrect Default Default Federation Config version."
+    confDownloadDefaultFederationConfig = "Your Federation default configuration file is not compatible with the current version of ADFS Toolkit. Do you want to download the default configuration file from the URL: {0}?"
+    confDownloadedDefaultFederationConfigIncompatible = "The downloaded Federation default configuration file is not compatible with the current version of ADFS Toolkit. Do you want to proceed without a Federation default file?"
+    confContinueWithoutDefaultFederationConfig = "Do you want to continue without a Federation Default file?"
+    confIncompatobleDefaultFederationConfig = "Your Federation default configuration file is not compatible with the current version of ADFS Toolkit. Do you want to download a default configuration file from GitHub?"
 
     #######################################
     ### Federation cmdlets [federation] ###

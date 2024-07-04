@@ -43,7 +43,7 @@
         $configFiles += $configFile
     }
     else {
-        $configFiles = $ADFSTkConfig.ConfigFiles.ConfigFile | ? enabled -eq $true | select -ExpandProperty '#text'
+        $configFiles = $ADFSTkConfig.Configuration.ConfigFiles.ConfigFile | ? enabled -eq $true | select -ExpandProperty '#text'
     }
     #endregion
 
@@ -156,8 +156,8 @@
          
         #Check against compatible version
         Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionStart)
-        Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionCompareVersions -f $ADFSTkConfig.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion)
-        if ([float]$ADFSTkConfig.ConfigVersion -eq [float]$Global:ADFSTkCompatibleADFSTkConfigVersion) {
+        Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionCompareVersions -f $ADFSTkConfig.Configuration.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion)
+        if ([float]$ADFSTkConfig.Configuration.ConfigVersion -eq [float]$Global:ADFSTkCompatibleADFSTkConfigVersion) {
             $resultObject.ResultValue = [Result]::Pass
             $resultObject.ResultText = Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionSucceeded
     
@@ -165,7 +165,7 @@
         }
         else {
             $resultObject.ResultValue = [Result]::Fail
-            $resultObject.ResultText = Get-ADFSTkLanguageText healthIncompatibleADFSTkConfigVersion -f $ADFSTkConfig.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion
+            $resultObject.ResultText = Get-ADFSTkLanguageText healthIncompatibleADFSTkConfigVersion -f $ADFSTkConfig.Configuration.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion
             $resultObject.FixID = "FixADFSTkConfigVersion"
     
             Write-ADFSTkLog $resultObject.ResultText -EntryType Warning
@@ -541,7 +541,7 @@
     $FixedAnything = $false
     
     
-     #region Fix incorrect Institution Config Version(s)
+    #region Fix incorrect Institution Config Version(s)
     #Only if run manually
     if (!$Silent) {
         $resultObject = $healthResults | ? FixID -eq "FixADFSTkConfigVersion"

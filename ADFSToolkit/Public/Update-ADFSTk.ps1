@@ -1,64 +1,366 @@
-﻿function Update-ADFSTkConfiguration {
-    if (!(Test-Path $Global:ADFSTkPaths.mainConfigFile)) {
-        #inform that we need a main config and that we will call that now
-        Write-ADFSTkHost confNeedMainConfigurationMessage -Style Info
-        $mainConfiguration = New-ADFSTkConfiguration
+﻿function Update-ADFSTk {
+
+    #region Import ADFSTk Config
+    Write-ADFSTkHost confProcessingADFSTkConfigs -AddLinesOverAndUnder -Style Info
+    $continue = $true
+
+    $mainConfiguration = Get-ADFSTkConfiguration -ForceCreation
+
+    #Check version
+    if ([string]::IsNullOrEmpty($mainConfiguration.Configuration.ConfigVersion)) {
+        Write-ADFSTkLog (Get-ADFSTkLanguageText confCouldNotRetrieveVersion) -EntryType Error -MajorFault
+        $continue = $false
     }
+    elseif ($mainConfiguration.Configuration.ConfigVersion -eq $Global:ADFSTkCompatibleADFSTkConfigVersion) {
+        Write-ADFSTkLog (Get-ADFSTkLanguageText confInstConfAlreadyCorrectVersion -f 'ADFS Toolkit Config file', $Global:ADFSTkCompatibleADFSTkConfigVersion) -EntryType Information
+        $continue = $false
+    }
+    #endregion
+
+    #region Import Main Federation Defaults
+    $defaultMainFederationConfig = Get-ADFSTkConfigurationDefaults -FederationDefault
+    if (![string]::IsNullOrEmpty($defaultMainFederationConfig) -and ![string]::IsNullOrEmpty($defaultMainFederationConfig.Configuration.ConfigVersion)) {
+        if ($defaultMainFederationConfig.Configuration.ConfigVersion -ne $Global:ADFSTkCompatibleADFSTkConfigVersion) {
+            #Try to locate the URL for the default config file
+            if (![string]::IsNullOrEmpty($mainConfiguration.Configuration.FederationConfig.Federation.URL)) {
+                if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confDownloadDefaultFederationConfig -f $mainConfiguration.Configuration.FederationConfig.Federation.URL) -DefaultYes) {
+                    Get-ADFSTkFederationDefaults -URL $mainConfiguration.Configuration.FederationConfig.Federation.URL -InstallDefaults
+                    $FederationDefaultsUpdated = $true
+                }
+                else {
+                    $defaultMainFederationConfig = $null
+                    if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confContinueWithoutDefaultFederationConfig) -DefaultYes) {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) #Fix text!
+                    }
+                    else {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault #Fix text!
+                    }
+                }
+            }
+            else {
+                if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confIncompatobleDefaultFederationConfig) -DefaultYes) {
+                    Get-ADFSTkFederationDefaults -InstallDefaults
+                    $FederationDefaultsUpdated = $true
+                }
+                else {
+                    $defaultMainFederationConfig = $null
+                    if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confContinueWithoutDefaultFederationConfig) -DefaultYes) {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) #Fix text!
+                    }
+                    else {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault #Fix text!
+                    }
+                }
+            }
+
+            #Check the version again
+            if ($FederationDefaultsUpdated) {
+                $defaultMainFederationConfig = Get-ADFSTkConfigurationDefaults -FederationDefault
+                if ($defaultMainFederationConfig.configuration.ConfigVersion -ne $Global:ADFSTkCompatibleInstitutionConfigVersion) {
+                    if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confDownloadedDefaultFederationConfigIncompatible) -DefaultYes) {
+                        $defaultMainFederationConfig = $null
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig)
+                    }
+                    else {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confNotAValidVersionError -f $defaultMainFederationConfig.configuration.ConfigVersion, $Global:ADFSTkCompatibleInstitutionConfigVersion) -MajorFault
+                    }    
+                }
+            }
+        }
+    }
+    else {
+        $defaultMainFederationConfig = $null
+        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig)
+    }
+    #endregion
+
+    #region Update ADFSTk Config
+    if ($continue) {
+        $result = Update-ADFSTkConfiguration -defaultADFSTkFederationConfig $defaultMainFederationConfig
+    }
+    #endregion
+
+    #region Import Institution Federation Defaults
+    $defaultConfig = Get-ADFSTkInstitutionConfigDefaults
+    $defaultFederationConfig = Get-ADFSTkInstitutionConfigDefaults -FederationDefault
+    $FederationDefaultsUpdated = $false
+    if (![string]::IsNullOrEmpty($defaultFederationConfig) -and ![string]::IsNullOrEmpty($defaultFederationConfig.configuration.ConfigVersion -and !$FederationDefaultsUpdated)) {
+        if ($defaultFederationConfig.configuration.ConfigVersion -ne $Global:ADFSTkCompatibleInstitutionConfigVersion) {
+            #Make this a function and call it from here and make new code to handle default main config file
+
+            #Try to locate the URL for the default config file
+            if (![string]::IsNullOrEmpty($mainConfiguration.Configuration.FederationConfig.Federation.URL)) {
+                if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confDownloadDefaultFederationConfig -f $mainConfiguration.Configuration.FederationConfig.Federation.URL) -DefaultYes) {
+                    Get-ADFSTkFederationDefaults -URL $mainConfiguration.Configuration.FederationConfig.Federation.URL -InstallDefaults
+                    $FederationDefaultsUpdated = $true
+                }
+                else {
+                    $defaultFederationConfig = $null
+                    if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confContinueWithoutDefaultFederationConfig) -DefaultYes) {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) 
+                    }
+                    else {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault #Fix text!
+                    }
+                }
+            }
+            else {
+                if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confIncompatobleDefaultFederationConfig) -DefaultYes) {
+                    Get-ADFSTkFederationDefaults -InstallDefaults
+                    $FederationDefaultsUpdated = $true
+                }
+                else {
+                    $defaultFederationConfig = $null
+                    if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confContinueWithoutDefaultFederationConfig) -DefaultYes) {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) 
+                    }
+                    else {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confAbortDueToIncorrectFederationConfigVersion) -MajorFault #Fix text!
+                    }
+                }
+            }
+
+            #Check the version again
+            if ($FederationDefaultsUpdated) {
+                $defaultFederationConfig = Get-ADFSTkInstitutionConfigDefaults -FederationDefault
+                if ($defaultFederationConfig.configuration.ConfigVersion -ne $Global:ADFSTkCompatibleInstitutionConfigVersion) {
+                    if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confDownloadedDefaultFederationConfigIncompatible) -DefaultYes) {
+                        $defaultFederationConfig = $null
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) 
+                    }
+                    else {
+                        Write-ADFSTkLog (Get-ADFSTkLanguageText confNotAValidVersionError -f $defaultFederationConfig.configuration.ConfigVersion, $Global:ADFSTkCompatibleInstitutionConfigVersion) -MajorFault
+                    }    
+                }
+            }
+        }
+    }
+    else {
+        $defaultFederationConfig = $null
+        Write-ADFSTkLog (Get-ADFSTkLanguageText confContinueWithoutFederationConfig) 
+    }
+    #endregion
+
+    #region Import ADFSTk Institution Config
+    Write-ADFSTkHost confProcessingInstitutionConfigs -AddLinesOverAndUnder -Style Info
+    $allCurrentConfigs = Get-ADFSTkConfiguration -ConfigFilesOnly
+    #region Old 0.9 code removed
+    # if ([string]::IsNullOrEmpty($allCurrentConfigs)) {
+    #     #This is for really old versions of ADFS Toolkit
+    #     $currentConfigs = @()
+    #     $currentConfigs += Get-ChildItem $Global:ADFSTkPaths.mainDir -Filter '*.xml' `
+    #         -Recurse | ? { $_.Directory.Name -notcontains 'cache' -and `
+    #             $_.Directory.Name -notcontains 'federation' -and `
+    #             $_.Name -ne 'config.ADFSTk.xml' -and -not`
+    #             $_.Name.EndsWith('_defaultConfigFile.xml') -and `
+    #             $_.Directory.Name -notcontains 'backup' } | `
+    #         Select Directory, Name, LastWriteTime | `
+    #         Sort Directory, Name
+        
+    #     if ($currentConfigs.Count -eq 0) {
+    #         Write-ADFSTkLog (Get-ADFSTkLanguageText confNoInstConfFiles) -MajorFault
+    #     }
+
+    #     #Add all selected federation config files to ADFSTk configuration
+    #     $selectedConfigsTemp = $currentConfigs | Out-GridView -Title (Get-ADFSTkLanguageText confSelectInstConfFileToHandle) -PassThru
+
+    #     foreach ($selectedConfig in $selectedConfigsTemp) {
+    #         #Check if it's an old file that neds to be copied to the institution dir
+    #         if ($selectedConfig.Directory -ne $Global:ADFSTkPaths.institutionDir) {
+    #             #Copy the configuration file to new location
+    #             $newFileName = Join-Path $Global:ADFSTkPaths.institutionDir $selectedConfig.Name
+    #             if (Test-Path $newFileName) {
+    #                 Write-ADFSTkLog (Get-ADFSTkLanguageText confInstConfFileAlreadyUpgraded -f (Join-Path $selectedConfig.Directory $selectedConfig.name), $newFileName) -MajorFault
+    #             }
+    #             else {
+    #                 Copy-Item (Join-Path $selectedConfig.Directory $selectedConfig.name) $newFileName
+    #             }
+
+    #             #Copy the ManualSP file to new location
+    #             [xml]$selectedConfigSettings = Get-Content (Join-Path $selectedConfig.Directory $selectedConfig.name)
+    #             $selectedConfigManualSP = $selectedConfigSettings.configuration.LocalRelyingPartyFile
+                
+    #             $oldManualSPFile = Join-Path $selectedConfig.Directory $selectedConfigManualSP
+    #             $newManualSPFile = Join-Path $Global:ADFSTkPaths.institutionDir $selectedConfigManualSP
+
+    #             if (Test-Path $oldManualSPFile) {
+    #                 if (Test-Path $newManualSPFile) {
+    #                     Write-ADFSTkLog (Get-ADFSTkLanguageText confManualSPFileAlreadyExists -f $oldManualSPFile, $Global:ADFSTkPaths.institutionDir) -EntryType Warning
+    #                 }
+    #                 else {
+    #                     Copy-Item $oldManualSPFile $newManualSPFile
+    #                     Write-ADFSTkLog (Get-ADFSTkLanguageText confManualSPFileCopied -f $oldManualSPFile, $Global:ADFSTkPaths.institutionDir) -EntryType Information
+    #                 }
+    #             }
+    #             $selectedConfig.Directory = $Global:ADFSTkPaths.institutionDir
+    #         }
+
+    #         $selectedConfigs += Add-ADFSTkConfigurationItem -ConfigurationItem (Join-Path $selectedConfig.Directory $selectedConfig.Name) -PassThru
+    #     }
+    # }
+    # else {
+    #endregion
+
+    #Open all configs and check version. Choose from the ones with wrong verion
+    $upgradableConfigs = foreach ($configFile in $allCurrentConfigs) {
+        $continue = $true
+        try {
+            [xml]$config = Get-Content $configFile.ConfigFile -ErrorAction Stop
+        }
+        catch {
+            Write-ADFSTkLog (Get-ADFSTkLanguageText confCouldNotOpenInstConfigFile -f $_) -EntryType Error
+            $continue = $false
+        }
     
-    try {
-        [xml]$mainConfiguration = Get-Content $Global:ADFSTkPaths.mainConfigFile
+        if ([string]::IsNullOrEmpty($config.configuration.ConfigVersion)) {
+            Write-ADFSTkLog (Get-ADFSTkLanguageText confCouldNotRetrieveVersion) -EntryType Error
+            $continue = $false
+        }
+        elseif ($config.configuration.ConfigVersion -eq $Global:ADFSTkCompatibleInstitutionConfigVersion) {
+            Write-ADFSTkLog (Get-ADFSTkLanguageText confInstConfAlreadyCorrectVersion -f "Institution config file '$($configFile.ConfigFile.Replace($Global:ADFSTkPaths.institutionDir+'\',''))'", $Global:ADFSTkCompatibleInstitutionConfigVersion) -EntryType Information
+            $continue = $false
+        }
+
+        if ($continue) {
+            Write-ADFSTkLog (Get-ADFSTkLanguageText confInstConfNeedsUpgrade -f "Institution config file '$($configFile.ConfigFile.Replace($Global:ADFSTkPaths.institutionDir+'\',''))'", $config.configuration.ConfigVersion, $Global:ADFSTkCompatibleInstitutionConfigVersion) -EntryType Information
+            $configFile
+        }
     }
-    catch {
-        Write-ADFSTkLog -Message (Get-ADFSTkLanguageText confCouldNotOpenDefaultConfig) -MajorFault
+
+    $selectedConfigs = $upgradableConfigs | Out-GridView -Title (Get-ADFSTkLanguageText confSelectInstConfFileToHandle) -PassThru
+    # }
+    #endregion
+
+    if (![string]::IsNullOrEmpty($selectedConfigs)) {
+        #region Copy Local Transform Rule File
+        if (!(Test-path $Global:ADFSTkPaths.institutionLocalTransformRulesFile)) {
+            Write-ADFSTkHost confLocalTransformRulesMessage -Style Info -AddLinesOverAndUnder -f $Global:ADFSTkPaths.institutionLocalTransformRulesFile
+            Copy-item -Path $Global:ADFSTkPaths.defaultInstitutionLocalTransformRulesFile -Destination $Global:ADFSTkPaths.institutionLocalTransformRulesFile
+        }
+        #endregion
     }
 
-    $mainConfigurationFile = Get-ChildItem $Global:ADFSTkPaths.mainConfigFile
+    #region Handle Institution Configs
+    $anyFaults = $false
+    $removeCache = $false
 
-    #First take a backup of the current file
-    if (!(Test-Path $Global:ADFSTkPaths.mainBackupDir)) {
-        Write-ADFSTkVerboseLog -Message (Get-ADFSTkLanguageText cFileDontExist -f $Global:ADFSTkPaths.mainBackupDir)
+    foreach ($configFile in $selectedConfigs) {
+        Write-ADFSTkHost confProcessingInstConfig -f $configFile.configFile -Style Info -AddSpaceAfter
+        $continue = $true
 
-        New-Item -ItemType Directory -Path $Global:ADFSTkPaths.mainBackupDir | Out-Null
-                
-        Write-ADFSTkVerboseLog -Message (Get-ADFSTkLanguageText cCreated)
-    }
-                
-    $backupFilename = "{0}_backup_v{3}_{1}{2}" -f $mainConfigurationFile.BaseName, (Get-Date).tostring("yyyyMMdd_HHmmss"), $mainConfigurationFile.Extension, $mainConfiguration.Configuration.ConfigVersion
-    $backupFile = Join-Path $Global:ADFSTkPaths.mainBackupDir $backupFilename
-    Copy-Item -Path $mainConfigurationFile -Destination $backupFile | Out-Null
+        try {
+            [xml]$config = Get-Content $configFile.ConfigFile -ErrorAction Stop
+        }
+        catch {
+            Write-ADFSTkLog (Get-ADFSTkLanguageText confCouldNotOpenInstConfigFile -f $_) -EntryType Error
+            $continue = $false
+        }
 
-    Write-ADFSTkLog (Get-ADFSTkLanguageText confOldConfBackedUpTo -f $backupFile) -ForegroundColor Green
+        # if ([string]::IsNullOrEmpty($config.configuration.ConfigVersion)) {
+        #     Write-ADFSTkLog (Get-ADFSTkLanguageText confCouldNotRetrieveVersion) -EntryType Error
+        #     $continue = $false
+        # }
+        # elseif ($config.configuration.ConfigVersion -eq $Global:ADFSTkCompatibleInstitutionConfigVersion) {
+        #     Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText confInstConfAlreadyCorrectVersion -f 'Institution config file', $Global:ADFSTkCompatibleInstitutionConfigVersion) -EntryType Information
+        #     $continue = $false
+        # }
 
-    $startVersion = $mainConfiguration.Configuration.ConfigVersion
-    ###Now lets upgrade in steps!###
-                
-    #v1.0 --> v1.1
-    $currentVersion = '1.0'
-    $newVersion = '1.1'
-    if ($mainConfiguration.Configuration.ConfigVersion -eq $currentVersion) {
-        Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText confUpdatingADFSTkConfigFromTo -f $currentVersion, $newVersion)
-                    
-        Add-ADFSTkXML -XML $mainConfiguration -XPathParentNode "Configuration" -RefNodeName "OutputLanguage" -NodeName "Fticks" 
-        Add-ADFSTkXML -XML $mainConfiguration -XPathParentNode "Configuration/Fticks" -NodeName "Server"
-        Add-ADFSTkXML -XML $mainConfiguration -XPathParentNode "Configuration/Fticks" -NodeName "Salt"
-        Add-ADFSTkXML -XML $mainConfiguration -XPathParentNode "Configuration/Fticks" -NodeName "LastRecordId"
-
-        $mainConfiguration.Configuration.ConfigVersion = $newVersion
-        $mainConfiguration.Save($mainConfigurationFile);
-
-        if (Get-ADFSTkAnswer -Message (Get-ADFSTkLanguageText confRegisterFticks)) {
-            #Register Fticks info
-            $FticksServer = Read-Host  (Get-ADFSTkLanguageText fticksServerNameNeeded)
-            Set-ADFSTkFticksServer -Server $FticksServer
-
-            #Register the Scheduled Task for F-Ticks
-            if (Get-ADFSTkAnswer -Message (Get-ADFSTkLanguageText confRegisterFticksScheduledTask)) {
-                Register-ADFSTkFTicksScheduledTask
+        if ($continue) {
+            $resultObject = Update-ADFSTkInstitutionConfiguration -ConfigFile $configFile -config $config -defaultFederationConfig $defaultFederationConfig -defaultConfig $defaultConfig
+            if ($resultObject.Result -eq $false) {
+                $anyFaults = $true
+            }
+            if ($resultObject.RemoveCache -eq $true) {
+                $removeCache = $true
             }
         }
     }
 
-    #Add any new attributes from Default Config or Default Federation Config to the Institution Config
+    if ($removeCache) {
+        Write-ADFSTkHost confDeleteCacheWarning -Style Attention
+        if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confDeleteCacheQuestion) -DefaultYes) {
+            Get-ChildItem $Global:ADFSTkPaths.cacheDir | Remove-Item -Confirm:$false
+        }
+    }
+    #endregion
 
-    Write-ADFSTkLog (Get-ADFSTkLanguageText confUpdatedInstConfigDone -f "ADFS Toolkit", $startVersion, $newVersion) -EntryType Information
+    #region ADFSTkStore Version
+    $ADFSTkStoreObject = Get-ADFSTkStore -ReturnAsObject
+    if ($ADFSTkStoreObject.ADFSTkStoreIsInstalled -and $ADFSTkStoreObject.SourceDllVersion -ne $ADFSTkStoreObject.InstalledDllVersion) {
+        Write-ADFSTkHost confADFSTkStoreNeedsUpgrade -Style Info -AddLinesOverAndUnder -f $ADFSTkStoreObject.ADFSTkStoreVersion, $Global:ADFSTkCompatibleADFSTkStoreVersion #Check text
+
+        Install-ADFSTkStore
+    }
+    #endregion
+
+    #region RefedsMFA/SFA Version
+    $ADFSTkMFAAdapters = Get-ADFSTkMFAAdapter -ReturnAsObject
+    if (($ADFSTkMFAAdapters.RefedsMFA -or $ADFSTkMFAAdapters.RefedsSFA) -and $ADFSTkMFAAdapters.SourceDllVersion -ne $ADFSTkMFAAdapters.InstalledDllVersion) {
+        Write-ADFSTkHost confADFSTkMFAAdaptersNeedsUpgrade -Style Info -AddLinesOverAndUnder -f $ADFSTkMFAAdapters.InstalledDllVersion, $ADFSTkMFAAdapters.SourceDllVersion #Check text
+
+        if ($RefedsMFA) {
+            Uninstall-ADFSTkMFAAdapter -RefedsMFA
+        }
+        if ($RefedsSFA) {
+            Uninstall-ADFSTkMFAAdapter RefedsSFA
+        }
+
+        if ($RefedsMFA) {
+            Install-ADFSTkMFAAdapter -RefedsMFA
+        }
+        if ($RefedsSFA) {
+            Install-ADFSTkMFAAdapter RefedsSFA
+        }
+    }
+    #endregion
+    
+    ###Now lets upgrade in steps!###
+    
+    # break
+
+    # $startVersion = '2.2.1'
+    # $newVersion = $MyInvocation.MyCommand.Module.Version.ToString()            
+    
+    # $ADFSTkConfigResult = $null
+    # $ADFSTkInstitutionConfigResult = $null
+
+    # #2.3.0
+    # if ($newVersion -eq '2.3.0') {
+    #     #Get Federation Default
+    #     #if (Get-ADFSTkAnswer -Message "T")
+
+    #     # ADFSTkConfigVersion = 1.0 --> 1.1
+    #     try {
+    #         $ADFSTkConfigResult = Update-ADFSTkConfiguration 
+    #     }
+    #     catch {
+    #         $_
+    #         $ADFSTkConfigResult = $false
+    #     }
+
+    #     # ADFSTkInstitutionConfigVersion = ? --> 1.4
+    #     try {
+    #         $ADFSTkInstitutionConfigResult = Update-ADFSTkInstitutionConfiguration
+    #     }
+    #     catch {
+    #         $_
+    #         $ADFSTkInstitutionConfigResult = $false
+    #     }
+    # }
+
+    # if ($ADFSTkConfigResult -eq $false -or $ADFSTkInstitutionConfigResult -eq $false) {
+    #     Write-ADFSTkLog (Get-ADFSTkLanguageText confUpdateError) -EntryType Error
+    # }
+    # elseif ($ADFSTkConfigResult -eq $true -or $ADFSTkInstitutionConfigResult -eq $true) {
+    #     Write-ADFSTkLog (Get-ADFSTkLanguageText confUpdatedInstConfigDone -f "ADFS Toolkit", $startVersion, $newVersion) -EntryType Information
+        
+    #     #Inform to run Get-ADFSTkHealth
+    #     Write-ADFSTkHost confRunHealthCheckRecommended -ForegroundColor Yellow
+    #     if (Get-ADFSTkAnswer (Get-ADFSTkLanguageText confDoRunHealthCheck) -DefaultYes) {
+    #         Get-ADFSTkHealth -HealthCheckMode Full
+    #     }
+    # }
+    # else {
+    #     Write-ADFSTkLog (Get-ADFSTkLanguageText confNoUpdatesNeeded) -EntryType Information
+    # }
 }
