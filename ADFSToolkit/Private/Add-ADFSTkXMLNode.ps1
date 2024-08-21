@@ -1,9 +1,10 @@
 function Add-ADFSTkXMLNode {
     param (
+        $Xml,
         $XPathParentNode,
         $Node
     )
     
-    $configurationNode = Select-Xml -Xml $config -XPath $XPathParentNode
-    $configurationNode.Node.AppendChild($config.ImportNode($Node, $true)) | Out-Null
+    $configurationNode = Select-Xml -Xml $Xml -XPath $XPathParentNode
+    $configurationNode.Node.AppendChild($Xml.ImportNode($Node, $true)) | Out-Null
 }

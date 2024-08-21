@@ -14,8 +14,8 @@ function New-ADFSTkFtickMessage {
         $Global:ADFSTkConfiguration = Get-ADFSTkConfiguration
     }
 
-    $FederationName = $Global:ADFSTkConfiguration.FederationConfig.Federation.FederationName #The name of the federation
-    $Salt = $Global:ADFSTkConfiguration.Fticks.Salt
+    $FederationName = $Global:ADFSTkConfiguration.Configuration.FederationConfig.Federation.FederationName #The name of the federation
+    $Salt = $Global:ADFSTkConfiguration.Configuration.Fticks.Salt
 
     #Get the timestamp
     $Timestamp = $LoggedTime.ToUniversalTime()

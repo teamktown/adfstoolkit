@@ -1,6 +1,6 @@
 ﻿@{
     tableLanguage = "en-US"
-    tableVersion = "2.1"
+    tableVersion = "2.2"
     tableCreatedBy = "SWAMID"
     tableContactAddress = "operations@swamid.se"
 
@@ -84,6 +84,19 @@ Get-ADFSTkFederationDefaults -URL [the URL provided from your Federation Operato
 
     mainconfNoConfigFileFound = "No ADFSTk configuration file found!"
     mainconfCouldNotParseConfigFile =  "Could not open or parse the ADFSTk configuration file!`r`n{0}"
+
+    ###############################################
+    ### State configuration cmdlets [stateconf] ###
+    ###############################################
+
+    stateconfCouldNotParseConfigFile = "Could not open or parse the State configuration file!`r`n{0}"
+    stateconfConfigFileExists = "A State configuration file already exists!"
+    stateconfDoCreateConfigFile = "Do you want to create a new State configuration file?`n(the current one will be backed up)"
+    stateconfOldConfigBackedUp = "Current State configuration file backed up to: '{0}'"
+    stateconfAbortDueToExistingConfFile = "Aborting due to already existing State configuration file."
+    stateconfNewConfFileCreated = "New State configuration file created: '{0}'"
+    stateconfNewConfFileMissing = "The State configuration file is missing! It will be created automatically now."
+    stateconfNoConfigFileFound = "No State configuration file found!"
 
     ################################################
     ### Institution configuration cmdlets [conf] ###
@@ -178,7 +191,8 @@ When the upgrade is done and you have tested everything, run Enable-ADFSTkInstit
     confUpdatedInstConfigDone = "{0} updated successfully from v{1} to {2}!"
     confUpdatedInstConfigAllDone = "All Institution config file(s) done..."
     confProcessingInstConfig = "Processing Institution config file: '{0}'"
-    confInstConfAlreadyCorrectVersion = "Current Institution config file already at v{0}!"
+    confInstConfAlreadyCorrectVersion = "{0} already at v{1}!"
+    confInstConfNeedsUpgrade = "{0} needs to be updated from v{1} to {2}!"
     confLocalManualSettingsMessage = @"
 ADFS Toolkit uses Entity Categories from the metadata to send correct attributes to the Service Providers.
 
@@ -239,11 +253,11 @@ Please open the file and configure how ADFSToolkit can get them (Active Director
     confSelectInstitutionConfigToDisable = "Select the configuration file(s) you want to disable."
     confNoInstitutionConfigFileSelected = "No configurationfile(s) were selected. Nothing changed!"
 
-    confProcessLoginEvents = "Process Login Events"
+    confProcessLoginEvents = "Process Login Events (f-ticks)"
     confThisSchedTaskGetsLoginEventsAndSendAsFticks = "This Scheduled Task reads login events from the Event Log and sends it to a f-ticks server"
     confFticksScheduledTaskInfo = @"
 The created F-Ticks Scheduled Task is currently disabled. Start Task Scheduler and enable it to start sending f-ticks. When enabled, it will run every 10 minutes.
-It's rekommended to change the running user to a service account with privileges to read the Event Log.
+It's recommended to change the running user to a service account with privileges to read the Event Log.
 "@
 
     confUpdatingADFSTkConfigFromTo = "Updating ADFS Toolkit config from {0} to {1}"
@@ -254,6 +268,38 @@ If you skip this step now you can configure it manually later by running:
 Set-ADFSTkFticksServer -Server [mysyslogserver.institution.edu]
 Register-ADFSTkFTicksScheduledTask
 "@
+    confFticksRegisterOnAllServers = @"
+You need to activate F-Ticks on all ADFS Servers in the farm!
+Run:
+Set-ADFSTkFticksServer -Server {0} 
+and
+Register-ADFSTkFTicksScheduledTask
+on the other ADFS servers to.
+"@
+    confIsAuditPolicyEnabled = "Checking if Audit Policy is enabled"
+    confAuditPolicyNeeded = @"
+    For the f-ticks to work properly, we need to alter the Audit Policy 'Application Generated' and enable
+    it for success and failure. You can see the Audit Policy if you start  the Local Security Policy and go to:
+    Advanced Audit Policy Configuration -> System Audit Policies -> Object Access
+    or with the command:
+    auditpol /get /category:'Object Access' /r | ConvertFrom-Csv | ? Subcategory -eq 'Application Generated'
+"@
+    confEnableAuditPolicyNow = "Do you want to enable the Audit Policy now?"
+    confAuditPolicyHasBeenEnabled = "Audit Policy 'Application Generated' has been enabled"
+    confAuditPolicyAborted = "Audit Policy 'Application Generated' has not been enabled. Please enable it and try again!"
+    confAuditPolicyIsEnabled = "Audit Policy 'Application Generated' is enabled"
+    confRunHealthCheckRecommended = "It's recommended to run Get-ADFSTkHealth -HealthCheckMode Full to find any errors."
+    confDoRunHealthCheck = "Do you want to run a full health check now?"
+    confNoUpdatesNeeded = "No updates to ADFSTk Configuration or AFSTk Institution Configuration needed or the configuration file(s) aready has the correct version."
+    confUpdateError = "At least one update failed. Please look above and correct the error(s) before continuing!"
+    confProcessingADFSTkConfigs = "Processing ADFS Toolkit configuration file..."
+    confProcessingInstitutionConfigs = "Processing Institution configuration files..."
+    confContinueWithoutFederationConfig = "Updating Institution Config without Default Federation Config..."
+    confAbortDueToIncorrectFederationConfigVersion = "Aborting due to missing or incorrect Default Default Federation Config version."
+    confDownloadDefaultFederationConfig = "Your Federation default configuration file is not compatible with the current version of ADFS Toolkit. Do you want to download the default configuration file from the URL: {0}?"
+    confDownloadedDefaultFederationConfigIncompatible = "The downloaded Federation default configuration file is not compatible with the current version of ADFS Toolkit. Do you want to proceed without a Federation default file?"
+    confContinueWithoutDefaultFederationConfig = "Do you want to continue without a Federation Default file?"
+    confIncompatobleDefaultFederationConfig = "Your Federation default configuration file is not compatible with the current version of ADFS Toolkit. Do you want to download a default configuration file from GitHub?"
 
     #######################################
     ### Federation cmdlets [federation] ###
@@ -471,13 +517,13 @@ Register-ADFSTkFTicksScheduledTask
     The ADFS Toolkit Configuration File is incompatible with this version of ADFS Toolkit!
     The ADFS Toolkit Configuration File version is {0} and the version needs to be {1}.
     
-    Run Update-ADFSTkConfiguration to update your configuration to the correct version.
+    Run Update-ADFSTk to update your configuration to the correct version.
 "@
     healthIncompatibleInstitutionConfigVersion = @"
 The provided Institution Configuration File is incompatible with this version of ADFS Toolkit!
 The Institution Configuration File version is {0} and the version needs to be {1}.
 
-Run Update-ADFSTkInstitutionConfiguration to update your configuration to the correct version.
+Run Update-ADFSTk to update your configuration to the correct version.
 "@
     healthCheckMissingSignaturesName = "Check missing signatures"
     healthCheckIncorectSignaturesName = "Check incorrect signatures"
@@ -510,8 +556,8 @@ If you don't know why this occurred, reinstallation of ADFS Toolkit is recommend
     healthCheckConfigVersionVerifyingVersionStart = "Verifying compatible version..."
     healthCheckConfigVersionVerifyingVersionCompareVersions = "Config version: {0} - Compatible version: {1}"
     healthCheckConfigVersionVerifyingVersionSucceeded = "Compatible version succeeded!"
-    healthUpdateADFSTkConfigVersion = "Do you want to run Update-ADFSTkConfiguration?"
-    healthUpdateInstitutionConfigVersion = "Do you want to run Update-ADFSTkInstitutionConfiguration for {0}?"
+    healthUpdateADFSTkConfigVersion = "Do you want to run Update-ADFSTk?"
+    healthUpdateInstitutionConfigVersion = "Do you want to run Update-ADFSTk?"
     healthCheckConfigVersionPass = "Versioncheck PASSED!"
     healthCheckConfigVersionFail = "Versioncheck FAILED!"
     healthCheckMFAAccessPolicyStartMessage = "Checking if MFA Adapter is installed and Access Control Policy is present..."

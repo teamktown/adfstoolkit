@@ -1,7 +1,7 @@
-function Process-ADFSTkFticks {
+function Invoke-ADFSTkFticks {
 
-    Verify-ADFSTkEventLogUsage -LogName ADFSToolkit -Source 'Process-ADFSTkFticks' | Out-Null
-    Write-ADFSTkLog -SetEventLogSource 'Process-ADFSTkFticks'
+    Verify-ADFSTkEventLogUsage -LogName ADFSToolkit -Source 'Invoke-ADFSTkFticks' | Out-Null
+    Write-ADFSTkLog -SetEventLogSource 'Invoke-ADFSTkFticks'
     
     $LoginEvents = Get-ADFSTkLoginEvents -LatestRecordsOnly
     Write-ADFSTkLog -Message (Get-ADFSTkLanguageText fticksProcessStarted -f $LoginEvents.Count) -EventID 300 -EntryType Information
@@ -11,10 +11,10 @@ function Process-ADFSTkFticks {
     }
     
     #Whatif the syslog server isn't configured?
-    $Server = $Global:ADFSTkConfiguration.Fticks.Server #Where to send the f-ticks
+    $Server = $Global:ADFSTkConfiguration.Configuration.Fticks.Server #Where to send the f-ticks
     $Hostname = (Get-AdfsProperties).Identifier.Host
     $IdP = (Get-AdfsProperties).Identifier.AbsoluteUri 
-    $Application = "ADFSToolkitv{0}:" -f (Get-Module ADFSToolkit).Version.ToString()
+    $Application = "ADFSToolkitv{0}:" -f $MyInvocation.MyCommand.Module.Version.ToString()
 
     $ErrorOccurred = $false
 
@@ -37,7 +37,7 @@ function Process-ADFSTkFticks {
     }
 
     if (![string]::IsNullOrEmpty($LoginEvents)) {
-        Set-ADFSTkConfiguration -FticksLastRecordId $LogRecordID
+        Set-ADFSTkStateConfiguration -FticksLastRecordId $LogRecordID
     }
     Write-ADFSTkLog -Message (Get-ADFSTkLanguageText fticksProcessFinished) -EventID 301 -EntryType Information
 }

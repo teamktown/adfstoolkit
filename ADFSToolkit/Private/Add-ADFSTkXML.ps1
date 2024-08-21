@@ -1,6 +1,6 @@
 function Add-ADFSTkXML {
     param (
-        $Xml, 
+        $XML, 
         $NodeName,
         $XPathParentNode,
         $RefNodeName,

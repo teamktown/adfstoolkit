@@ -18,7 +18,7 @@
         RemovedSPsStillInSPHash       = ($HealthCheckMode -eq "Full") #Only run in Full mode
         ScheduledTaskPresent          = ($HealthCheckMode -eq "Full") #Checks if the Import Metadata Scheduled Task is present
         MissingSPsInADFS              = ($HealthCheckMode -eq "Full") #Only run in Full mode
-        FticksScheduledTaskPresent     = ($HealthCheckMode -eq "Full") #Checks if the F-ticks Scheduled Task is present
+        FticksScheduledTaskPresent    = ($HealthCheckMode -eq "Full") #Checks if the F-ticks Scheduled Task is present
     }
 
     enum Result {
@@ -43,7 +43,7 @@
         $configFiles += $configFile
     }
     else {
-        $configFiles = $ADFSTkConfig.ConfigFiles.ConfigFile | ? enabled -eq $true | select -ExpandProperty '#text'
+        $configFiles = $ADFSTkConfig.Configuration.ConfigFiles.ConfigFile | ? enabled -eq $true | select -ExpandProperty '#text'
     }
     #endregion
 
@@ -156,8 +156,8 @@
          
         #Check against compatible version
         Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionStart)
-        Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionCompareVersions -f $ADFSTkConfig.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion)
-        if ([float]$ADFSTkConfig.ConfigVersion -eq [float]$Global:ADFSTkCompatibleADFSTkConfigVersion) {
+        Write-ADFSTkVerboseLog (Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionCompareVersions -f $ADFSTkConfig.Configuration.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion)
+        if ([float]$ADFSTkConfig.Configuration.ConfigVersion -eq [float]$Global:ADFSTkCompatibleADFSTkConfigVersion) {
             $resultObject.ResultValue = [Result]::Pass
             $resultObject.ResultText = Get-ADFSTkLanguageText healthCheckConfigVersionVerifyingVersionSucceeded
     
@@ -165,7 +165,7 @@
         }
         else {
             $resultObject.ResultValue = [Result]::Fail
-            $resultObject.ResultText = Get-ADFSTkLanguageText healthIncompatibleADFSTkConfigVersion -f $ADFSTkConfig.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion
+            $resultObject.ResultText = Get-ADFSTkLanguageText healthIncompatibleADFSTkConfigVersion -f $ADFSTkConfig.Configuration.ConfigVersion, $Global:ADFSTkCompatibleADFSTkConfigVersion
             $resultObject.FixID = "FixADFSTkConfigVersion"
     
             Write-ADFSTkLog $resultObject.ResultText -EntryType Warning
@@ -541,13 +541,13 @@
     $FixedAnything = $false
     
     
-     #region Fix incorrect Institution Config Version(s)
+    #region Fix incorrect Institution Config Version(s)
     #Only if run manually
     if (!$Silent) {
         $resultObject = $healthResults | ? FixID -eq "FixADFSTkConfigVersion"
             if (![String]::IsNullOrEmpty($resultObject)) {
                 if ((Get-ADFSTkAnswer (Get-ADFSTkLanguageText healthUpdateADFSTkConfigVersion))) {
-                    Update-ADFSTkConfiguration
+                    Update-ADFSTk
                 
                     $resultObject.ResultText = (Get-ADFSTkLanguageText healthFixed) + $resultObject.ResultText
                     $resultObject.ResultValue = [Result]::Pass 
@@ -564,8 +564,8 @@
         $resultObjects = $healthResults | ? FixID -eq "FixInstitutionConfigVersion"
         foreach ($resultObject in $resultObjects) {
             if (![String]::IsNullOrEmpty($resultObject)) {
-                if ((Get-ADFSTkAnswer (Get-ADFSTkLanguageText healthUpdateInstitutionConfigVersion -f $resultObject.ReferenceFile))) {
-                    Update-ADFSTkInstitutionConfiguration -ConfigurationFile $resultObject.ReferenceFile
+                if ((Get-ADFSTkAnswer (Get-ADFSTkLanguageText healthUpdateInstitutionConfigVersion))) {
+                    Update-ADFSTk
                 
                     $resultObject.ResultText = (Get-ADFSTkLanguageText healthFixed) + $resultObject.ResultText
                     $resultObject.ResultValue = [Result]::Pass 

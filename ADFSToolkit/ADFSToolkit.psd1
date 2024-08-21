@@ -81,7 +81,7 @@ PowerShellVersion = '5.0'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Import-ADFSTkMetadata', 'New-ADFSTkConfiguration', 'Unpublish-ADFSTkAggregate', 'Get-ADFSTkTransformRuleObjects', 'Update-ADFSTkInstitutionConfiguration', 'Sync-ADFSTkAggregates', 'New-ADFSTkInstitutionConfiguration', 'Enable-ADFSTkInstitutionConfiguration', 'Disable-ADFSTkInstitutionConfiguration', 'Get-ADFSTkToolsIssuanceTransformRules', 'Get-ADFSTkHealth', 'Get-ADFSTkPaths', 'Get-ADFSTkFederationDefaults', 'Remove-ADFSTkCache', 'Copy-ADFSTkToolRules', 'Get-ADFSTkToolEntityId', 'Install-ADFSTkMFAAdapter','Uninstall-ADFSTkMFAAdapter','Get-ADFSTkMFAAdapter','Get-ADFSTkEntityHash','Remove-ADFSTkEntityHash','Get-ADFSTkMetadata', 'Get-ADFSTkHealth', 'Register-ADFSTkScheduledTask', 'Get-ADFSTkToolSpInfoFromMetadata', 'Install-ADFSTkStore', 'Uninstall-ADFSTkStore', 'Get-ADFSTkStore', 'Get-ADFSTkLoginEvents','Process-ADFSTkFticks', 'Register-ADFSTkFticksScheduledTask', 'Update-ADFSTkConfiguration', 'Set-ADFSTkFticksServer'
+FunctionsToExport = 'Import-ADFSTkMetadata', 'New-ADFSTkConfiguration', 'Unpublish-ADFSTkAggregate', 'Get-ADFSTkTransformRuleObjects', 'Update-ADFSTkInstitutionConfiguration', 'Sync-ADFSTkAggregates', 'New-ADFSTkInstitutionConfiguration', 'Enable-ADFSTkInstitutionConfiguration', 'Disable-ADFSTkInstitutionConfiguration', 'Get-ADFSTkToolsIssuanceTransformRules', 'Get-ADFSTkHealth', 'Get-ADFSTkPaths', 'Get-ADFSTkFederationDefaults', 'Remove-ADFSTkCache', 'Copy-ADFSTkToolRules', 'Get-ADFSTkToolEntityId', 'Install-ADFSTkMFAAdapter','Uninstall-ADFSTkMFAAdapter','Get-ADFSTkMFAAdapter','Get-ADFSTkEntityHash','Remove-ADFSTkEntityHash','Get-ADFSTkMetadata', 'Get-ADFSTkHealth', 'Register-ADFSTkScheduledTask', 'Get-ADFSTkToolSpInfoFromMetadata', 'Install-ADFSTkStore', 'Uninstall-ADFSTkStore', 'Get-ADFSTkStore', 'Get-ADFSTkLoginEvents','Invoke-ADFSTkFticks', 'Register-ADFSTkFticksScheduledTask', 'Update-ADFSTkConfiguration', 'Set-ADFSTkFticksServer', 'New-ADFSTkStateConfiguration', 'Get-ADFSTkToolIdPInfoFromMetadata', 'Get-ADFSTkStateConfiguration', 'Update-ADFSTk'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 #CmdletsToExport = @(Import-Metadata)
@@ -122,7 +122,7 @@ PrivateData = @{
         # ReleaseNotes = ''
 
         # Prerelease string of this module
-        Prerelease = 'RC1'
+        Prerelease = 'RC2'
 
     } # End of PSData hashtable
 

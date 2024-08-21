@@ -1,18 +1,18 @@
 
 
-function get-ADFSTkLocalManualSPSettings {
+function Get-ADFSTkLocalManualSPSettings {
 
     # HOW TO USE THIS FILE
     #
     # To see examples:
     # dot source this file from the location:
-    #  . c:\ADFSToolkit\<version>\config\get-ADFSTkLocalManualSPSettings.ps1
+    #  . C:\ADFSToolkit\config\institution\Get-ADFSTkLocalManualSpSettings.ps1
     #
     # To see examples invoke Powershell get-help: 
-    #   get-help get-ADFSTkLocalManualSPSettings -Examples
+    #   Get-Help Get-ADFSTkLocalManualSPSettings -Examples
 
     # This file exists as a template in the Module with a runtime instance in: 
-    #     c:\ADFSToolkit\<version>\config\get-ADFSTkLocalManualSPSettings.ps1  
+    #     C:\ADFSToolkit\config\institution\Get-ADFSTkLocalManualSpSettings.ps1  
 
     #To get help with wich attributes that are available, run the following commands:
     #(you can select the lines between <# and #> and press F8 to run them
