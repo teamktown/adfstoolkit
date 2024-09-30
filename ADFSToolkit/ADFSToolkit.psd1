@@ -16,8 +16,9 @@
 # v2.2.0-RC2  : 10/13/2022
 # v2.2.0      : 10/18/2022
 # v2.2.1      : 11/28/2022
-# v2.3.0-RC1     : 09/14/2023
-
+# v2.3.0-RC1  : 09/14/2023
+# v2.3.0-RC2  : 09/18/2024
+# v2.3.0-RC3  : 09/30/2024
 @{
 
 # Script module or binary module file associated with this manifest.
@@ -122,7 +123,7 @@ PrivateData = @{
         # ReleaseNotes = ''
 
         # Prerelease string of this module
-        Prerelease = 'RC2'
+        Prerelease = 'RC3'
 
     } # End of PSData hashtable
 
