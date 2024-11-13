@@ -16,14 +16,18 @@
 # v2.2.0-RC2  : 10/13/2022
 # v2.2.0      : 10/18/2022
 # v2.2.1      : 11/28/2022
+# v2.3.0-RC1  : 09/14/2023
+# v2.3.0-RC2  : 09/18/2024
+# v2.3.0-RC3  : 09/30/2024
+# v2.3.0      : 11/13/2024
 
 @{
 
 # Script module or binary module file associated with this manifest.
 RootModule = 'ADFSToolkit.psm1'
 
-# Version number of this module.
-ModuleVersion = '2.2.1'
+# Version number of this module. See line 125 for PreReleaes designations where an empty value is 'released'
+ModuleVersion = '2.3.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -38,7 +42,7 @@ Author = 'Chris Phillips, Johan Peterson and Tommy Larsson'
 CompanyName = 'CANARIE and SWAMID'
 
 # Copyright statement for this module
-Copyright = '(c) 2017-2020 Chris Phillips CANARIE, Johan Peterson and Tommy Larsson SWAMID http://www.apache.org/licenses/LICENSE-2.0'
+Copyright = '(c) 2017-2024 Chris Phillips CANARIE, Johan Peterson and Tommy Larsson SWAMID http://www.apache.org/licenses/LICENSE-2.0'
 
 # Description of the functionality provided by this module
 Description = 'Module to handle SAML2 federation aggregates.'
@@ -80,7 +84,7 @@ PowerShellVersion = '5.0'
 # NestedModules = @()
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-FunctionsToExport = 'Import-ADFSTkMetadata', 'New-ADFSTkConfiguration', 'Unpublish-ADFSTkAggregate', 'Get-ADFSTkTransformRuleObjects', 'Update-ADFSTkInstitutionConfiguration', 'Sync-ADFSTkAggregates', 'New-ADFSTkInstitutionConfiguration', 'Enable-ADFSTkInstitutionConfiguration', 'Disable-ADFSTkInstitutionConfiguration', 'Get-ADFSTkToolsIssuanceTransformRules', 'Get-ADFSTkHealth', 'Get-ADFSTkPaths', 'Get-ADFSTkFederationDefaults', 'Remove-ADFSTkCache', 'Copy-ADFSTkToolRules', 'Get-ADFSTkToolEntityId', 'Install-ADFSTkMFAAdapter','Uninstall-ADFSTkMFAAdapter','Get-ADFSTkMFAAdapter','Get-ADFSTkEntityHash','Remove-ADFSTkEntityHash','Get-ADFSTkMetadata', 'Get-ADFSTkHealth', 'Register-ADFSTkScheduledTask', 'Get-ADFSTkToolSpInfoFromMetadata', 'Install-ADFSTkStore', 'Uninstall-ADFSTkStore', 'Get-ADFSTkStore'
+FunctionsToExport = 'Import-ADFSTkMetadata', 'New-ADFSTkConfiguration', 'Unpublish-ADFSTkAggregate', 'Get-ADFSTkTransformRuleObjects', 'Update-ADFSTkInstitutionConfiguration', 'Sync-ADFSTkAggregates', 'New-ADFSTkInstitutionConfiguration', 'Enable-ADFSTkInstitutionConfiguration', 'Disable-ADFSTkInstitutionConfiguration', 'Get-ADFSTkToolsIssuanceTransformRules', 'Get-ADFSTkHealth', 'Get-ADFSTkPaths', 'Get-ADFSTkFederationDefaults', 'Remove-ADFSTkCache', 'Copy-ADFSTkToolRules', 'Get-ADFSTkToolEntityId', 'Install-ADFSTkMFAAdapter','Uninstall-ADFSTkMFAAdapter','Get-ADFSTkMFAAdapter','Get-ADFSTkEntityHash','Remove-ADFSTkEntityHash','Get-ADFSTkMetadata', 'Get-ADFSTkHealth', 'Register-ADFSTkScheduledTask', 'Get-ADFSTkToolSpInfoFromMetadata', 'Install-ADFSTkStore', 'Uninstall-ADFSTkStore', 'Get-ADFSTkStore', 'Get-ADFSTkLoginEvents','Invoke-ADFSTkFticks', 'Register-ADFSTkFticksScheduledTask', 'Update-ADFSTkConfiguration', 'Set-ADFSTkFticksServer', 'New-ADFSTkStateConfiguration', 'Get-ADFSTkToolIdPInfoFromMetadata', 'Get-ADFSTkStateConfiguration', 'Update-ADFSTk'
 
 # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
 #CmdletsToExport = @(Import-Metadata)
