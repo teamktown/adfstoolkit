@@ -19,6 +19,7 @@
 # v2.3.0-RC1  : 09/14/2023
 # v2.3.0-RC2  : 09/18/2024
 # v2.3.0-RC3  : 09/30/2024
+# v2.3.0      : 11/13/2024
 @{
 
 # Script module or binary module file associated with this manifest.
@@ -40,7 +41,7 @@ Author = 'Chris Phillips, Johan Peterson and Tommy Larsson'
 CompanyName = 'CANARIE and SWAMID'
 
 # Copyright statement for this module
-Copyright = '(c) 2017-2020 Chris Phillips CANARIE, Johan Peterson and Tommy Larsson SWAMID http://www.apache.org/licenses/LICENSE-2.0'
+Copyright = '(c) 2017-2024 Chris Phillips CANARIE, Johan Peterson and Tommy Larsson SWAMID http://www.apache.org/licenses/LICENSE-2.0'
 
 # Description of the functionality provided by this module
 Description = 'Module to handle SAML2 federation aggregates.'
@@ -123,7 +124,7 @@ PrivateData = @{
         # ReleaseNotes = ''
 
         # Prerelease string of this module
-        Prerelease = 'RC3'
+        Prerelease = ''
 
     } # End of PSData hashtable
 
