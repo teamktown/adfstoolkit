@@ -302,14 +302,14 @@
             Uninstall-ADFSTkMFAAdapter -RefedsMFA
         }
         if ($ADFSTkMFAAdapters.RefedsSFA ) {
-            Uninstall-ADFSTkMFAAdapter RefedsSFA
+            Uninstall-ADFSTkMFAAdapter -RefedsSFA
         }
 
         if ($ADFSTkMFAAdapters.RefedsMFA) {
             Install-ADFSTkMFAAdapter -RefedsMFA
         }
         if ($ADFSTkMFAAdapters.RefedsSFA) {
-            Install-ADFSTkMFAAdapter RefedsSFA
+            Install-ADFSTkMFAAdapter -RefedsSFA
         }
     }
     #endregion
